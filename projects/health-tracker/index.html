@@ -430,30 +430,6 @@
   }
   @keyframes spin{to{transform:rotate(360deg);}}
 
-  .confirm-card{
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:var(--radius-md);
-    padding:14px;
-    margin-top:12px;
-  }
-  .confirm-card .cf-row{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:8px 0;
-  }
-  .confirm-card .cf-name{font-weight:700; font-size:15px;}
-  .qty-ctrl{display:flex; align-items:center; gap:10px;}
-  .qty-ctrl button{
-    width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);
-    background:#FDFCF9; font-size:16px; font-weight:700; color:var(--green); cursor:pointer;
-  }
-  .qty-ctrl span{font-weight:700; min-width:20px; text-align:center;}
-  .macro-tags{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 4px;}
-  .macro-tags span{
-    background:#F1ECDF; color:var(--ink-soft); font-size:11.5px; font-weight:600;
-    padding:5px 9px; border-radius:999px;
-  }
-
   /* Bottom nav */
   .bottomnav{
     position:fixed;
@@ -523,41 +499,43 @@
 </style>
 </head>
 <body>
-  <!-- Family Login Modal -->
-<div id="loginOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,-apple-system,sans-serif;">
-  <div style="background:#fff;max-width:380px;width:100%;border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.3);text-align:center;">
-    <h2 style="margin:0 0 8px;color:#1e293b;">Family Portal Login</h2>
-    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Select your name and enter your PIN to continue.</p>
 
-    <label style="display:block;text-align:left;font-weight:600;font-size:13px;margin-bottom:6px;color:#334155;">Who are you?</label>
-    <select id="userSelect" style="width:100%;padding:10px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:16px;font-size:15px;">
+<!-- Family Login Modal -->
+<div id="loginOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,-apple-system,sans-serif;">
+  <div style="background:#fff;max-width:380px;width:100%;border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.3);text-align:center;">
+    <h2 style="margin:0 0 8px;color:#1e293b;font-size:22px;">Family Portal</h2>
+    <p style="margin:0 0 20px;color:#64748b;font-size:13.5px;">Select your name and enter your PIN to continue.</p>
+
+    <label style="display:block;text-align:left;font-weight:600;font-size:13px;margin-bottom:6px;color:#334155;">Who is logging in?</label>
+    <select id="userSelect" style="width:100%;padding:11px;border-radius:10px;border:1.5px solid #cbd5e1;margin-bottom:16px;font-size:15px;background:#f8fafc;">
       <option value="Dad">Dad</option>
       <option value="Mom">Mom</option>
       <option value="Didi">Didi</option>
       <option value="Tanisi">Tanisi</option>
     </select>
 
-    <label style="display:block;text-align:left;font-weight:600;font-size:13px;margin-bottom:6px;color:#334155;">Enter PIN</label>
-    <input type="password" id="userPin" placeholder="4-digit PIN" maxlength="6" style="width:100%;padding:10px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:16px;font-size:15px;box-sizing:border-box;">
+    <label style="display:block;text-align:left;font-weight:600;font-size:13px;margin-bottom:6px;color:#334155;">4-Digit PIN</label>
+    <input type="password" id="userPin" placeholder="Enter PIN" maxlength="6" style="width:100%;padding:11px;border-radius:10px;border:1.5px solid #cbd5e1;margin-bottom:14px;font-size:16px;box-sizing:border-box;">
 
-    <p id="loginError" style="color:#ef4444;font-size:13px;display:none;margin-bottom:12px;">Incorrect PIN. Please try again.</p>
+    <p id="loginError" style="color:#ef4444;font-size:13px;display:none;margin-bottom:12px;font-weight:500;">Incorrect PIN. Please try again.</p>
 
-    <button onclick="handleLogin()" style="width:100%;background:#064e3b;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:600;font-size:15px;cursor:pointer;">Unlock Health Tracker</button>
+    <button onclick="handleLogin()" style="width:100%;background:#25402F;color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;">Unlock Health Tracker</button>
   </div>
 </div>
 
-<!-- Personalized Greeting Banner (Displays above the tracker once logged in) -->
-<div id="personalBanner" style="display:none;max-width:600px;margin:16px auto;padding:16px 20px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-family:system-ui,-apple-system,sans-serif;">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+<!-- Personalized Greeting Banner -->
+<div id="personalBanner" style="display:none;max-width:480px;margin:16px auto 0;padding:18px 20px;border-radius:16px;background:#FFF9F5;border:1px solid #FFE4D6;box-shadow:0 4px 14px rgba(0,0,0,0.03);">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
     <div>
-      <h3 id="bannerGreeting" style="margin:0 0 6px;font-size:17px;"></h3>
-      <p id="bannerMessage" style="margin:0;font-size:14px;line-height:1.5;color:#047857;"></p>
+      <h3 id="bannerGreeting" style="margin:0 0 6px;font-size:17.5px;color:#9C4221;"></h3>
+      <p id="bannerMessage" style="margin:0;font-size:13.5px;line-height:1.55;color:#5C4033;white-space:pre-line;"></p>
     </div>
-    <button onclick="handleLogout()" style="background:transparent;border:none;color:#059669;text-decoration:underline;font-size:12px;cursor:pointer;padding-left:12px;">Switch</button>
+    <button onclick="handleLogout()" style="background:none;border:none;color:#A85D3B;text-decoration:underline;font-size:12px;cursor:pointer;padding-left:10px;font-weight:600;">Switch</button>
   </div>
+  <div id="bannerGallery" style="display:none;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:10px;margin-top:14px;"></div>
 </div>
-<div class="app" id="app">
 
+<div class="app" id="app">
   <div class="topbar">
     <div class="brand">
       <div class="mark">Thali Track</div>
@@ -580,7 +558,7 @@
   <!-- ONBOARDING -->
   <div class="screen" id="screen-onboard">
     <div class="onboard-card">
-      <h2 id="ob-title">Let's set up Dad's profile</h2>
+      <h2 id="ob-title">Let's set up profile</h2>
       <p class="lead">This helps work out a sensible daily calorie and protein target. It takes under a minute — and can be changed anytime from Settings.</p>
 
       <div class="field">
@@ -637,7 +615,7 @@
       </div>
 
       <button class="btn-primary" id="ob-save">Create profile</button>
-      <p class="note">This gives a general estimate for healthy, gradual weight loss — not medical advice. If either of them has a health condition (diabetes, heart, thyroid, kidney, etc.), it's worth checking these targets with their doctor first.</p>
+      <p class="note">This gives a general estimate for healthy, gradual weight loss — not medical advice.</p>
     </div>
   </div>
 
@@ -657,7 +635,6 @@
     </div>
 
     <div id="exercise-chips"></div>
-
     <div class="macro-grid" id="macro-grid"></div>
 
     <div class="section-title">What to eat next</div>
@@ -683,7 +660,7 @@
     <div id="pane-quick"></div>
 
     <div id="pane-exercise" style="display:none;">
-      <div class="cat-label">What did he do today?</div>
+      <div class="cat-label">What exercise was done today?</div>
       <div class="food-grid" id="exercise-grid"></div>
       <div class="onboard-card" style="margin-top:14px; padding:16px;">
         <div class="field" style="margin-bottom:10px;">
@@ -691,7 +668,6 @@
           <input type="number" id="ex-minutes" placeholder="45" value="45">
         </div>
         <button class="btn-primary" id="ex-add" style="margin-top:0;">Add to today</button>
-        <p class="note" style="margin-top:10px;">We credit back about 75% of the estimated burn — exercise calorie estimates run high, so this avoids eating back more than was actually burned. On rest days, just skip this.</p>
       </div>
       <div class="cat-label">Logged today</div>
       <div id="exercise-today-list"></div>
@@ -701,12 +677,11 @@
       <div class="photo-zone" id="photoZone">
         <div class="picon">📷</div>
         <h3>Photo of the plate</h3>
-        <p>Take or choose a clear photo of the food. We'll identify the dish and estimate calories &amp; protein — you can adjust before adding.</p>
+        <p>Take or choose a clear photo of your thali. We'll identify each dish and calculate the calories &amp; macros.</p>
         <label class="photo-label" for="photoInput">Choose photo</label>
         <input type="file" accept="image/*" id="photoInput">
       </div>
       <div id="photoResults"></div>
-      <p class="note" id="photoNote">Uses your Gemini API key to identify the dish — add one in Settings (⚙). Works the same whether opened through Claude or hosted as a standalone site. You'll always be asked to confirm what it identified before any nutrition numbers are added.</p>
     </div>
   </div>
 
@@ -720,7 +695,7 @@
     <div class="onboard-card" style="margin-top:16px; padding:18px 18px;">
       <div class="field" style="margin-bottom:10px;">
         <label>Log today's weight (kg)</label>
-        <input type="number" id="wt-input" placeholder="e.g. 84.2" step="0.1">
+        <input type="number" id="wt-input" placeholder="e.g. 78.2" step="0.1">
       </div>
       <button class="btn-primary" id="wt-save" style="margin-top:2px;">Save weigh-in</button>
     </div>
@@ -741,14 +716,14 @@
   <div class="screen" id="screen-settings">
     <div class="onboard-card">
       <h2>Settings</h2>
-      <p class="lead">Everyone's data stays in this browser, on this device — no account or login needed.</p>
+      <p class="lead">Everyone's data stays securely in this browser on this device.</p>
 
       <div class="field">
         <label>Gemini API key (for "Snap a photo")</label>
-        <input type="text" id="settings-apikey" placeholder="AIza...">
+        <input type="text" id="settings-apikey" placeholder="Enter Gemini API key">
       </div>
-      <button class="btn-primary" id="settings-save">Save</button>
-      <p class="note">Only needed for photo food-recognition — everything else (picking from the list, tracking, history, progress) works without it. Get a key at <span style="font-weight:600;">aistudio.google.com/apikey</span>. Stored only in this browser, sent only to Google's API when a photo is analysed.</p>
+      <button class="btn-primary" id="settings-save">Save Key</button>
+      <p class="note">Get your free API key at <span style="font-weight:600;">aistudio.google.com/apikey</span>.</p>
       <button class="btn-ghost" id="settings-back">Back</button>
     </div>
   </div>
@@ -764,7 +739,7 @@
 </div>
 
 <script>
-/* ---------------- Food database (typical Indian vegetarian servings) ---------------- */
+/* ---------------- Food database ---------------- */
 const FOOD_DB = [
   {cat:'Breakfast', name:'Idli (2 pcs)', cal:78, p:2.4, c:16, f:0.4, fi:1},
   {cat:'Breakfast', name:'Dosa, plain (1)', cal:133, p:2.7, c:19, f:5, fi:1},
@@ -800,14 +775,14 @@ const FOOD_DB = [
 const EXERCISE_DB = [
   {name:'Swim — easy laps', met:6.0, note:'Low impact, gentle on the back'},
   {name:'Swim — vigorous', met:9.8, note:'Low impact, higher effort'},
-  {name:'Squash — casual', met:7.3, note:'Higher impact — go easy if the back is acting up'},
-  {name:'Squash — competitive', met:12.0, note:'Higher impact — go easy if the back is acting up'},
+  {name:'Squash — casual', met:7.3, note:'Higher impact'},
+  {name:'Squash — competitive', met:12.0, note:'High cardio'},
   {name:'Brisk walk', met:4.3, note:'Low impact'},
   {name:'Gym / general workout', met:5.0, note:''},
 ];
 const EXERCISE_CREDIT_FACTOR = 0.75;
 
-/* ---------------- Storage helpers (browser localStorage — works as a standalone hosted site) ---------------- */
+/* ---------------- Storage helpers ---------------- */
 const STORE_PREFIX = 'thali-track:';
 async function sGet(key){
   try{
@@ -832,15 +807,14 @@ async function sListPrefix(prefix){
 }
 
 /* ---------------- State ---------------- */
-let currentProfile = null;       // active profile id, e.g. 'dad', 'tanisi'
-let profileIndex = [];           // ordered list of known profile ids
-let profiles = {};               // id -> profile object (loaded lazily)
+let currentProfile = null;
+let profileIndex = [];
+let profiles = {};
 let todayKey = () => new Date().toISOString().slice(0,10);
-let todaysLog = {};              // id -> array (loaded lazily per id)
-let todaysExercise = {};         // id -> array (loaded lazily per id)
+let todaysLog = {};
+let todaysExercise = {};
 let currentScreen = 'home';
-let pendingPhotoItems = [];
-let addingNewProfile = false;    // true while onboarding a brand-new (non-default) person
+let addingNewProfile = false;
 let selectedExercise = null;
 let screenBeforeSettings = 'home';
 
@@ -850,6 +824,8 @@ function displayName(id){
   if(p && p.name) return p.name;
   if(id==='dad') return 'Dad';
   if(id==='mom') return 'Mom';
+  if(id==='didi') return 'Didi';
+  if(id==='tanisi') return 'Tanisi';
   return id.charAt(0).toUpperCase()+id.slice(1);
 }
 function slugify(name){
@@ -860,21 +836,132 @@ function slugify(name){
   return candidate;
 }
 
+/* ---------------- Family Credentials & Greetings ---------------- */
+const familyUsers = {
+  Dad: {
+    id: "dad",
+    pin: "1234",
+    greeting: "Welcome, Dad! ❤️",
+    message: "Thank you for always being our pillar of strength. Your health, daily energy, and happiness mean the world to me — take good care of yourself today!",
+    photos: []
+  },
+  Mom: {
+    id: "mom",
+    pin: "1234",
+    greeting: "Welcome, Mom! ❤️",
+    message: "Your warmth and care keep our home bright and beautiful. Please make sure to eat well, stay hydrated, and take moments to rest today!",
+    photos: []
+  },
+  Didi: {
+    id: "didi",
+    pin: "1234",
+    greeting: "Hey Didi! ✨",
+    message: "Cheering you on every single day! Keep crushing your goals, staying fit, and shining bright.",
+    photos: []
+  },
+  Tanisi: {
+    id: "tanisi",
+    pin: "1234",
+    greeting: "To My Favorite Person, Tanisi ❤️✨",
+    message: "Thank you for filling my life with so much happiness, laughter, and light. Watching you thrive is my favorite thing in the world, and I'm always cheering for you.\n\nHere’s to staying radiant, nourished, and building countless beautiful memories together! 💕",
+    photos: [
+      "https://drive.google.com/thumbnail?id=1F9hXhg7HnuzDBlnY0Vnx5ucsa__eakQB&sz=w600",
+      "https://drive.google.com/thumbnail?id=1dR5oaet4H9UJfVO22K1432K4Zq5zAYbK&sz=w600",
+      "https://drive.google.com/thumbnail?id=1vqTa5Iw3TpyQRg7eWfB1Gl4qEjc5V1p9&sz=w600"
+    ]
+  }
+};
+
+function checkSession() {
+  const savedUser = localStorage.getItem("thali_family_user");
+  const overlay = document.getElementById("loginOverlay");
+  if (savedUser && familyUsers[savedUser]) {
+    if (overlay) overlay.style.display = "none";
+    showDashboard(savedUser);
+  } else {
+    if (overlay) overlay.style.display = "flex";
+  }
+}
+
+function handleLogin() {
+  const user = document.getElementById("userSelect").value;
+  const pin = document.getElementById("userPin").value.trim();
+  const errorEl = document.getElementById("loginError");
+
+  if (familyUsers[user] && familyUsers[user].pin === pin) {
+    errorEl.style.display = "none";
+    localStorage.setItem("thali_family_user", user);
+    showDashboard(user);
+  } else {
+    errorEl.style.display = "block";
+  }
+}
+
+function showDashboard(user) {
+  const data = familyUsers[user];
+  const overlay = document.getElementById("loginOverlay");
+  if (overlay) overlay.style.display = "none";
+
+  const banner = document.getElementById("personalBanner");
+  document.getElementById("bannerGreeting").textContent = data.greeting;
+  document.getElementById("bannerMessage").textContent = data.message;
+  banner.style.display = "block";
+
+  const gallery = document.getElementById("bannerGallery");
+  gallery.innerHTML = "";
+  if (data.photos && data.photos.length > 0) {
+    gallery.style.display = "grid";
+    data.photos.forEach(src => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.style.width = "100%";
+      img.style.height = "120px";
+      img.style.objectFit = "cover";
+      img.style.borderRadius = "12px";
+      img.style.boxShadow = "0 3px 8px rgba(0,0,0,0.08)";
+      gallery.appendChild(img);
+    });
+  } else {
+    gallery.style.display = "none";
+  }
+
+  if (data.id && profileIndex.includes(data.id)) {
+    switchProfile(data.id);
+  }
+}
+
+function handleLogout() {
+  localStorage.removeItem("thali_family_user");
+  document.getElementById("userPin").value = "";
+  document.getElementById("personalBanner").style.display = "none";
+  checkSession();
+}
+
 /* ---------------- Init ---------------- */
 async function init(){
   const idx = await sGet('profile-index');
-  profileIndex = idx || ['dad','mom'];
-  if(!idx) await sSet('profile-index', profileIndex);
-  if(!profileIndex.includes('didi')){
-    profileIndex.push('didi');
-    await sSet('profile-index', profileIndex);
-  }
+  // Strict order: Dad, Mom, Didi, Tanisi
+  profileIndex = idx || ['dad','mom','didi','tanisi'];
+  if(!profileIndex.includes('didi')) profileIndex.push('didi');
+  if(!profileIndex.includes('tanisi')) profileIndex.push('tanisi');
+  
+  const targetOrder = ['dad', 'mom', 'didi', 'tanisi'];
+  profileIndex.sort((a,b)=>{
+    const ia = targetOrder.indexOf(a), ib = targetOrder.indexOf(b);
+    if(ia !== -1 && ib !== -1) return ia - ib;
+    if(ia !== -1) return -1;
+    if(ib !== -1) return 1;
+    return 0;
+  });
+  await sSet('profile-index', profileIndex);
+
   currentProfile = profileIndex[0];
   await loadProfileData(currentProfile);
   renderProfileSwitcher();
   renderCurrentProfileScreen();
   bindEvents();
   showWaterReminder();
+  checkSession();
 }
 
 async function loadProfileData(id){
@@ -1009,7 +1096,6 @@ function renderHome(){
   ];
   document.getElementById('macro-grid').innerHTML = macros.map(m=>{
     const pc = Math.min(100, Math.round((m.eaten/m.target)*100));
-    const remain = Math.max(0, Math.round(m.target-m.eaten));
     return '<div class="macro-card"><div class="name">'+m.name+'</div>'+
       '<div class="amt">'+Math.round(m.eaten)+m.unit+' <small>of '+m.target+m.unit+'</small></div>'+
       '<div class="macro-bar"><i style="width:'+pc+'%; background:'+m.color+'"></i></div></div>';
@@ -1029,8 +1115,7 @@ function renderRecommendation(t, eaten, left){
 
   if(left <= 50){
     box.innerHTML = '<div class="rtitle">Calorie budget is about used up</div>'+
-      '<div class="rec-item"><div><div class="nm">Buttermilk or plain tea</div><div class="nn">Light, keeps you comfortable till tomorrow</div></div></div>'+
-      '<div class="rec-item"><div><div class="nm">A short walk</div><div class="nn">Helps digestion, no calories added</div></div></div>';
+      '<div class="rec-item"><div><div class="nm">Buttermilk or plain tea</div><div class="nn">Light, keeps you comfortable till tomorrow</div></div></div>';
     return;
   }
 
@@ -1038,11 +1123,10 @@ function renderRecommendation(t, eaten, left){
   if(pool.length === 0) pool = FOOD_DB.slice();
   const catPool = pool.filter(f=>f.cat===mealCat);
   const finalPool = catPool.length>=2 ? catPool : pool;
-
   finalPool.sort((a,b)=> (b.p/b.cal) - (a.p/a.cal));
   const picks = finalPool.slice(0,3);
 
-  const title = remP > 15 ? 'Good, protein-rich picks for next meal' : 'Fits your remaining budget';
+  const title = remP > 15 ? 'Protein-rich picks for next meal' : 'Fits your remaining budget';
   box.innerHTML = '<div class="rtitle">'+title+'</div>' + picks.map(f=>{
     return '<div class="rec-item"><div><div class="nm">'+f.name+'</div><div class="nn">'+Math.round(f.cal)+' kcal · '+f.p+'g protein</div></div>'+
       '<button data-add="'+f.name+'">Add</button></div>';
@@ -1159,592 +1243,42 @@ async function addExercise(){
   renderExerciseChips(currentProfile);
 }
 
-/* ---------------- Photo analysis via Claude API ---------------- */
+/* ---------------- Photo Analysis with Interactive Chat & Single Log ---------------- */
 function fileToBase64(file){
   return new Promise((res,rej)=>{
     const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
+    r.onload = () => res(r.result.split(','));
     r.onerror = () => rej(new Error('read failed'));
     r.readAsDataURL(file);
   });
 }
 
-const GEMINI_MODEL = 'gemini-flash-latest';
 function getApiKey(){
   return localStorage.getItem(STORE_PREFIX+'gemini-api-key') || '';
 }
+
+let currentMealItems = [];
+let oilMultiplier = 1.0;
 
 async function analyzePhoto(file){
   const resultsDiv = document.getElementById('photoResults');
   const apiKey = getApiKey();
   if(!apiKey){
-    resultsDiv.innerHTML = '<div class="empty-state">Add a Gemini API key in Settings (⚙ at the top) to turn on photo recognition. "Pick from list" works fine without any setup, meanwhile.</div>';
+    resultsDiv.innerHTML = '<div class="empty-state">Add a Gemini API key in Settings (⚙ at top) to enable photo analysis.</div>';
     return;
   }
   const previewB64 = await fileToBase64(file);
   const mediaType = file.type || 'image/jpeg';
 
   resultsDiv.innerHTML = '<div class="preview-wrap"><img src="data:'+mediaType+';base64,'+previewB64+'"></div>'+
-    '<div class="analyzing"><div class="spinner"></div> Identifying the dish…</div>';
+    '<div class="analyzing"><div class="spinner"></div> Identifying dishes and portion sizes…</div>';
 
   try{
-    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+GEMINI_MODEL+':generateContent?key='+encodeURIComponent(apiKey), {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey
+      },
       body: JSON.stringify({
-        systemInstruction:{parts:[{text:"You are a nutrition estimator for Indian home-cooked vegetarian food. Look at the photo and identify each distinct food item on the plate. For each item, estimate a typical Indian home-serving portion and its nutrition. Respond with ONLY valid JSON (no markdown, no preamble), in this exact shape: {\"items\":[{\"name\":\"string\",\"cal\":number,\"p\":number,\"c\":number,\"f\":number,\"fi\":number}]}. cal=calories(kcal), p=protein(g), c=carbs(g), f=fat(g), fi=fiber(g). Keep names short and familiar (e.g. 'Dal', 'Roti (2)', 'Mixed veg sabzi'). If you cannot identify anything edible, return {\"items\":[]}."}]},
-        contents:[{
-          parts:[
-            {text:'Identify the food in this photo and estimate its nutrition as instructed.'},
-            {inlineData:{mimeType:mediaType, data:previewB64}}
-          ]
-        }],
-        generationConfig:{ temperature:0.2, responseMimeType:'application/json' }
-      })
-    });
-    const data = await response.json();
-    if(data.error) throw new Error(data.error.message || 'API error');
-    const cand = (data.candidates||[])[0];
-    const part = cand && cand.content && cand.content.parts ? cand.content.parts.find(p=>p.text) : null;
-    if(!part) throw new Error('no text in response');
-    let clean = part.text.trim().replace(/^```json/,'').replace(/^```/,'').replace(/```$/,'').trim();
-    const parsed = JSON.parse(clean);
-    pendingPhotoItems = (parsed.items||[]).map(it=>({...it, qty:1, confirmed:false, editing:false}));
-    renderPhotoConfirm();
-  } catch(e){
-    console.error(e);
-    resultsDiv.innerHTML = '<div class="preview-wrap"><img src="data:'+mediaType+';base64,'+previewB64+'"></div>'+
-      '<div class="empty-state">Could not analyse this photo — check the Gemini API key in Settings is correct and has quota. You can always pick the closest item from "Pick from list" instead.</div>';
-  }
-}
-
-async function estimateNutritionForName(name){
-  const apiKey = getApiKey();
-  if(!apiKey) return null;
-  const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+GEMINI_MODEL+':generateContent?key='+encodeURIComponent(apiKey), {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({
-      systemInstruction:{parts:[{text:"You are a nutrition estimator for Indian home-cooked vegetarian food. Given a dish name and a typical Indian home-serving portion, respond with ONLY valid JSON (no markdown, no preamble): {\"cal\":number,\"p\":number,\"c\":number,\"f\":number,\"fi\":number}. cal=calories(kcal), p=protein(g), c=carbs(g), f=fat(g), fi=fiber(g)."}]},
-      contents:[{parts:[{text:'Dish: '+name}]}],
-      generationConfig:{ temperature:0.2, responseMimeType:'application/json' }
-    })
-  });
-  const data = await response.json();
-  if(data.error) throw new Error(data.error.message || 'API error');
-  const cand = (data.candidates||[])[0];
-  const part = cand && cand.content && cand.content.parts ? cand.content.parts.find(p=>p.text) : null;
-  if(!part) return null;
-  const clean = part.text.trim().replace(/^```json/,'').replace(/^```/,'').replace(/```$/,'').trim();
-  return JSON.parse(clean);
-}
-
-function renderPhotoConfirm(){
-  const resultsDiv = document.getElementById('photoResults');
-  const imgHtml = resultsDiv.querySelector('.preview-wrap') ? resultsDiv.querySelector('.preview-wrap').outerHTML : '';
-  if(pendingPhotoItems.length===0){
-    resultsDiv.innerHTML = imgHtml + '<div class="empty-state">Could not make out any food in that photo. Try a clearer, well-lit shot, or add it from the list instead.</div>';
-    return;
-  }
-  resultsDiv.innerHTML = imgHtml + pendingPhotoItems.map((it,idx)=>{
-    if(!it.confirmed){
-      if(it.editing){
-        return '<div class="confirm-card">'+
-          '<div class="cf-name" style="margin-bottom:8px;">What is this actually?</div>'+
-          '<input type="text" id="edit-name-'+idx+'" value="'+String(it.name).replace(/"/g,'&quot;')+'" style="width:100%;padding:11px;border-radius:9px;border:1.5px solid var(--line);font-size:15px;">'+
-          '<div style="display:flex; gap:8px; margin-top:10px;">'+
-            '<button class="btn-primary" style="flex:1; padding:10px; margin-top:0;" data-saveedit="'+idx+'">Save &amp; estimate</button>'+
-            '<button class="btn-ghost" style="flex:1; padding:10px; margin-top:0;" data-canceledit="'+idx+'">Cancel</button>'+
-          '</div></div>';
-      }
-      return '<div class="confirm-card">'+
-        '<div class="cf-name">We think this is: '+it.name+'</div>'+
-        '<div style="display:flex; gap:8px; margin-top:10px;">'+
-          '<button class="btn-primary" style="flex:1; padding:10px; margin-top:0;" data-confirmid="'+idx+'">Yes, that\'s right</button>'+
-          '<button class="btn-ghost" style="flex:1; padding:10px; margin-top:0;" data-editid="'+idx+'">Not quite</button>'+
-        '</div></div>';
-    }
-    return '<div class="confirm-card">'+
-      '<div class="cf-row"><div class="cf-name">'+it.name+'</div>'+
-      '<div class="qty-ctrl"><button data-pminus="'+idx+'">–</button><span id="pqty-'+idx+'">'+it.qty+'</span><button data-pplus="'+idx+'">+</button></div></div>'+
-      '<div class="macro-tags"><span>'+Math.round(it.cal*it.qty)+' kcal</span><span>'+Math.round(it.p*it.qty)+'g protein</span><span>'+Math.round(it.c*it.qty)+'g carbs</span><span>'+Math.round(it.f*it.qty)+'g fat</span></div>'+
-      '<button class="btn-primary" style="margin-top:10px; padding:10px;" data-padd="'+idx+'">Add to today\'s log</button>'+
-      '</div>';
-  }).join('');
-}
-
-function confirmIdentity(idx){
-  pendingPhotoItems[idx].confirmed = true;
-  renderPhotoConfirm();
-}
-function startEditIdentity(idx){
-  pendingPhotoItems[idx].editing = true;
-  renderPhotoConfirm();
-}
-function cancelEditIdentity(idx){
-  pendingPhotoItems[idx].editing = false;
-  renderPhotoConfirm();
-}
-async function saveEditedIdentity(idx){
-  const input = document.getElementById('edit-name-'+idx);
-  const newName = input.value.trim();
-  if(!newName){ showToast('Enter a name'); return; }
-  const item = pendingPhotoItems[idx];
-  item.name = newName;
-  showToast('Re-estimating…');
-  try{
-    const est = await estimateNutritionForName(newName);
-    if(est){ item.cal=est.cal; item.p=est.p; item.c=est.c; item.f=est.f; item.fi=est.fi; }
-  } catch(e){
-    console.error(e);
-    showToast('Could not re-estimate — check macros before adding');
-  }
-  item.editing = false;
-  item.confirmed = true;
-  renderPhotoConfirm();
-}
-
-/* ---------------- History ---------------- */
-async function renderHistory(){
-  const wrap = document.getElementById('hist-list');
-  const p = profiles[currentProfile];
-  if(!p){ wrap.innerHTML=''; return; }
-  const t = computeTargets(p);
-  wrap.innerHTML = '<div class="analyzing"><div class="spinner"></div> Loading…</div>';
-  const rows = [];
-  const d = new Date();
-  for(let i=0; i<14; i++){
-    const day = new Date(d); day.setDate(d.getDate()-i);
-    const key = day.toISOString().slice(0,10);
-    const log = i===0 ? todaysLog[currentProfile] : (await sGet('log:'+currentProfile+':'+key)) || [];
-    if(i>0 && log.length===0) continue;
-    const sums = log.reduce((a,it)=>{
-      a.cal += it.cal*it.qty; a.p += it.p*it.qty; a.c += it.c*it.qty; a.f += it.f*it.qty;
-      return a;
-    },{cal:0,p:0,c:0,f:0});
-    rows.push({key, day, ...sums});
-  }
-  if(rows.length===0){
-    wrap.innerHTML = '<div class="empty-state">No days logged yet.</div>';
-    return;
-  }
-  wrap.innerHTML = rows.map(r=>{
-    const pct = Math.min(100, Math.round((r.cal/t.calTarget)*100));
-    const label = r.day.toLocaleDateString('en-IN',{weekday:'short', day:'numeric', month:'short'});
-    return '<div class="hist-row" style="flex-direction:column; align-items:stretch;">'+
-      '<div style="display:flex; justify-content:space-between; align-items:center;">'+
-      '<div><div class="hd">'+label+'</div><div class="hs">'+fmt(r.cal)+' kcal of '+fmt(t.calTarget)+'</div></div>'+
-      '<div class="hist-bar"><i style="width:'+pct+'%"></i></div></div>'+
-      '<div class="macro-tags" style="margin-top:10px;">'+
-        '<span>'+Math.round(r.p)+'g protein</span><span>'+Math.round(r.c)+'g carbs</span><span>'+Math.round(r.f)+'g fat</span>'+
-      '</div></div>';
-  }).join('');
-}
-
-/* ---------------- Weight tracking / Progress ---------------- */
-async function getWeightLog(who){
-  try{
-    const keys = await sListPrefix('weightlog:'+who+':');
-    const entries = [];
-    for(const k of keys){
-      const dateStr = k.split(':')[2];
-      const v = await sGet(k);
-      if(v!=null) entries.push({date:dateStr, weight:v});
-    }
-    entries.sort((a,b)=> a.date < b.date ? -1 : 1);
-    return entries;
-  } catch(e){
-    console.error('weight log read failed', e);
-    return [];
-  }
-}
-
-async function renderProgress(){
-  const p = profiles[currentProfile];
-  const summary = document.getElementById('progress-summary');
-  const listWrap = document.getElementById('progress-list');
-  if(!p){ summary.innerHTML=''; listWrap.innerHTML=''; return; }
-
-  document.getElementById('wt-input').value = p.weight || '';
-  listWrap.innerHTML = '<div class="analyzing"><div class="spinner"></div> Loading…</div>';
-
-  const entries = await getWeightLog(currentProfile);
-  const start = p.startWeight || p.weight;
-  const current = entries.length ? entries[entries.length-1].weight : p.weight;
-  const goal = p.goalWeight;
-
-  let summaryHtml = '<div class="cal-hero" style="background:var(--green-soft, var(--green));">';
-  summaryHtml += '<div class="label">Current weight</div>';
-  summaryHtml += '<div class="big">'+current+' <span>kg</span></div>';
-  if(goal){
-    const toGo = +(current - goal).toFixed(1);
-    const totalToLose = +(start - goal).toFixed(1);
-    const lost = +(start - current).toFixed(1);
-    const pct = totalToLose>0 ? Math.min(100, Math.max(0, Math.round((lost/totalToLose)*100))) : 0;
-    summaryHtml += '<div class="sub">Goal: '+goal+' kg — '+(toGo>0 ? toGo+' kg to go' : 'Goal reached 🎉')+'</div>';
-    summaryHtml += '<div class="cal-track"><div class="cal-fill" style="width:'+pct+'%"></div></div>';
-    summaryHtml += '<div class="cal-meta"><span>Started at '+start+' kg</span><span>Lost so far: '+lost+' kg</span></div>';
-  } else {
-    summaryHtml += '<div class="sub">Add a goal weight from "Edit profile" to track progress toward it</div>';
-  }
-  summaryHtml += '</div>';
-
-  if(goal && p.startDate){
-    const daysDeficitBased = estimateDaysToGoal(p);
-    summaryHtml += '<p class="note">At the pace set in the profile ('+paceLabel(p.pace)+'), reaching '+goal+' kg from '+start+' kg takes roughly '+daysDeficitBased+' days of consistent tracking — faster in the first couple of weeks (water weight), then it typically levels to a steadier rate.</p>';
-  }
-  summary.innerHTML = summaryHtml;
-
-  if(entries.length===0){
-    listWrap.innerHTML = '<div class="empty-state">No weigh-ins logged yet. Add one above — same day each week (e.g. every morning) gives the most reliable trend.</div>';
-    return;
-  }
-  const rev = entries.slice().reverse();
-  listWrap.innerHTML = rev.map((e,idx)=>{
-    const prev = rev[idx+1];
-    const delta = prev ? +(e.weight - prev.weight).toFixed(1) : null;
-    const dateLabel = new Date(e.date+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short', day:'numeric', month:'short'});
-    let deltaHtml = '';
-    if(delta!=null){
-      const color = delta<0 ? 'var(--green)' : (delta>0 ? 'var(--brick)' : 'var(--ink-soft)');
-      const sign = delta>0 ? '+' : '';
-      deltaHtml = '<div class="hs" style="color:'+color+'; font-weight:700;">'+sign+delta+' kg vs last entry</div>';
-    }
-    return '<div class="hist-row"><div><div class="hd">'+e.weight+' kg</div><div class="hs">'+dateLabel+'</div></div>'+deltaHtml+'</div>';
-  }).join('');
-}
-
-function paceLabel(pace){
-  if(pace===0.25) return 'Gentle, 0.25 kg/week';
-  if(pace===0.5) return 'Steady, 0.5 kg/week';
-  return 'Faster, 0.75 kg/week';
-}
-
-function estimateDaysToGoal(p){
-  const toLose = p.weight - p.goalWeight;
-  if(toLose<=0) return 0;
-  const weeks = toLose / p.pace;
-  return Math.round(weeks*7);
-}
-
-async function saveWeighIn(){
-  const val = parseFloat(document.getElementById('wt-input').value);
-  if(!val || val<=0){ showToast('Enter a valid weight'); return; }
-  await sSet('weightlog:'+currentProfile+':'+todayKey(), val);
-  const p = profiles[currentProfile];
-  p.weight = val;
-  await sSet('profile:'+currentProfile, p);
-  showToast('Weigh-in saved');
-  renderProgress();
-}
-
-/* ---------------- Toast ---------------- */
-let toastTimer;
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 1800);
-}
-
-let waterTimer;
-function showWaterReminder(){
-  const b = document.getElementById('waterBanner');
-  b.style.display = 'flex';
-  clearTimeout(waterTimer);
-  waterTimer = setTimeout(()=>{ b.style.display = 'none'; }, 7000);
-}
-
-/* ---------------- Events ---------------- */
-function bindEvents(){
-  document.getElementById('profileSwitch').addEventListener('click', e=>{
-    const btn = e.target.closest('button[data-p]');
-    if(btn) switchProfile(btn.dataset.p);
-  });
-
-  document.getElementById('addPersonBtn').addEventListener('click', ()=>{
-    addingNewProfile = true;
-    currentScreen = 'onboard';
-    document.getElementById('ob-title').textContent = "Let's set up a new profile";
-    document.getElementById('ob-name-label').textContent = 'Name';
-    clearOnboardForm();
-    showScreen('onboard');
-  });
-
-  document.getElementById('settingsBtn').addEventListener('click', ()=>{
-    screenBeforeSettings = currentScreen;
-    document.getElementById('settings-apikey').value = localStorage.getItem(STORE_PREFIX+'gemini-api-key') || '';
-    showScreen('settings');
-  });
-  document.getElementById('settings-save').addEventListener('click', ()=>{
-    const key = document.getElementById('settings-apikey').value.trim();
-    if(key) localStorage.setItem(STORE_PREFIX+'gemini-api-key', key);
-    else localStorage.removeItem(STORE_PREFIX+'gemini-api-key');
-    showToast('Settings saved');
-    showScreen(screenBeforeSettings || 'home');
-  });
-  document.getElementById('settings-back').addEventListener('click', ()=>{
-    showScreen(screenBeforeSettings || 'home');
-  });
-
-  document.getElementById('waterDismiss').addEventListener('click', ()=>{
-    document.getElementById('waterBanner').style.display = 'none';
-  });
-
-  document.querySelectorAll('.bottomnav button').forEach(b=>{
-    b.addEventListener('click', ()=>{ if(profiles[currentProfile]) showScreen(b.dataset.s); });
-  });
-
-  document.getElementById('gotoSettings').addEventListener('click', ()=>{
-    const p = profiles[currentProfile];
-    addingNewProfile = false;
-    document.getElementById('ob-title').textContent = "Edit "+displayName(currentProfile)+"'s profile";
-    document.getElementById('ob-name-label').textContent = 'Display name (optional)';
-    fillOnboardForm(p);
-    showScreen('onboard');
-  });
-
-  // onboarding segmented controls
-  document.getElementById('ob-activity').addEventListener('click', e=>{
-    if(e.target.tagName==='BUTTON'){
-      document.querySelectorAll('#ob-activity button').forEach(b=>b.classList.remove('sel'));
-      e.target.classList.add('sel');
-    }
-  });
-  document.getElementById('ob-pace').addEventListener('click', e=>{
-    if(e.target.tagName==='BUTTON'){
-      document.querySelectorAll('#ob-pace button').forEach(b=>b.classList.remove('sel'));
-      e.target.classList.add('sel');
-    }
-  });
-
-  document.getElementById('ob-save').addEventListener('click', saveOnboard);
-  document.getElementById('wt-save').addEventListener('click', saveWeighIn);
-
-  // add-food tabs
-  document.getElementById('tab-quick').addEventListener('click', ()=>showAddTab('quick'));
-  document.getElementById('tab-photo').addEventListener('click', ()=>showAddTab('photo'));
-  document.getElementById('tab-exercise').addEventListener('click', ()=>showAddTab('exercise'));
-
-  document.getElementById('photoInput').addEventListener('change', e=>{
-    const file = e.target.files[0];
-    if(file) analyzePhoto(file);
-  });
-
-  document.getElementById('ex-add').addEventListener('click', addExercise);
-
-  // delegated clicks
-  document.body.addEventListener('click', e=>{
-    const add = e.target.closest('[data-quickadd]');
-    if(add){ addFoodByName(add.dataset.quickadd, 1); return; }
-
-    const recAdd = e.target.closest('[data-add]');
-    if(recAdd){ addFoodByName(recAdd.dataset.add, 1); return; }
-
-    const del = e.target.closest('[data-del]');
-    if(del){
-      const idx = parseInt(del.dataset.del,10);
-      todaysLog[currentProfile].splice(idx,1);
-      sSet('log:'+currentProfile+':'+todayKey(), todaysLog[currentProfile]);
-      renderHome();
-      return;
-    }
-
-    const exSel = e.target.closest('[data-exselect]');
-    if(exSel){ selectedExercise = exSel.dataset.exselect; highlightSelectedExercise(); return; }
-    const delEx = e.target.closest('[data-delex]');
-    if(delEx){
-      const idx = parseInt(delEx.dataset.delex,10);
-      todaysExercise[currentProfile].splice(idx,1);
-      sSet('exercise:'+currentProfile+':'+todayKey(), todaysExercise[currentProfile]);
-      renderTodayExerciseList();
-      renderHome();
-      return;
-    }
-
-    const pminus = e.target.closest('[data-pminus]');
-    if(pminus){
-      const idx = parseInt(pminus.dataset.pminus,10);
-      pendingPhotoItems[idx].qty = Math.max(0.5, pendingPhotoItems[idx].qty-0.5);
-      renderPhotoConfirm();
-      return;
-    }
-    const pplus = e.target.closest('[data-pplus]');
-    if(pplus){
-      const idx = parseInt(pplus.dataset.pplus,10);
-      pendingPhotoItems[idx].qty += 0.5;
-      renderPhotoConfirm();
-      return;
-    }
-    const padd = e.target.closest('[data-padd]');
-    if(padd){
-      const idx = parseInt(padd.dataset.padd,10);
-      const it = pendingPhotoItems[idx];
-      addLogEntry({name:it.name, cal:it.cal, p:it.p, c:it.c, f:it.f, fi:it.fi, qty:it.qty});
-      return;
-    }
-
-    const confirmId = e.target.closest('[data-confirmid]');
-    if(confirmId){ confirmIdentity(parseInt(confirmId.dataset.confirmid,10)); return; }
-
-    const editId = e.target.closest('[data-editid]');
-    if(editId){ startEditIdentity(parseInt(editId.dataset.editid,10)); return; }
-
-    const cancelEdit = e.target.closest('[data-canceledit]');
-    if(cancelEdit){ cancelEditIdentity(parseInt(cancelEdit.dataset.canceledit,10)); return; }
-
-    const saveEdit = e.target.closest('[data-saveedit]');
-    if(saveEdit){ saveEditedIdentity(parseInt(saveEdit.dataset.saveedit,10)); return; }
-  });
-}
-
-function fillOnboardForm(p){
-  document.getElementById('ob-name').value = p.name || '';
-  document.getElementById('ob-age').value = p.age;
-  document.getElementById('ob-gender').value = p.gender;
-  document.getElementById('ob-height').value = p.height;
-  document.getElementById('ob-weight').value = p.weight;
-  document.getElementById('ob-goal').value = p.goalWeight || '';
-  document.querySelectorAll('#ob-activity button').forEach(b=>b.classList.toggle('sel', parseFloat(b.dataset.v)===p.activity));
-  document.querySelectorAll('#ob-pace button').forEach(b=>b.classList.toggle('sel', parseFloat(b.dataset.v)===p.pace));
-}
-
-async function saveOnboard(){
-  const age = parseFloat(document.getElementById('ob-age').value);
-  const height = parseFloat(document.getElementById('ob-height').value);
-  const weight = parseFloat(document.getElementById('ob-weight').value);
-  const nameVal = document.getElementById('ob-name').value.trim();
-  if(!age || !height || !weight){
-    showToast('Please fill in age, height and weight');
-    return;
-  }
-  if(addingNewProfile && !nameVal){
-    showToast('Add a name so it shows up in the switcher');
-    return;
-  }
-  const activityBtn = document.querySelector('#ob-activity button.sel');
-  const paceBtn = document.querySelector('#ob-pace button.sel');
-  const goalRaw = document.getElementById('ob-goal').value;
-
-  let targetId = currentProfile;
-  if(addingNewProfile){
-    targetId = slugify(nameVal);
-    profileIndex.push(targetId);
-    await sSet('profile-index', profileIndex);
-  }
-
-  const existing = profiles[targetId];
-  const profile = {
-    name: nameVal,
-    age, height, weight,
-    gender: document.getElementById('ob-gender').value,
-    activity: activityBtn ? parseFloat(activityBtn.dataset.v) : 1.375,
-    pace: paceBtn ? parseFloat(paceBtn.dataset.v) : 0.5,
-    goalWeight: goalRaw ? parseFloat(goalRaw) : (existing ? existing.goalWeight : null),
-    startWeight: existing && existing.startWeight ? existing.startWeight : weight,
-    startDate: existing && existing.startDate ? existing.startDate : todayKey(),
-  };
-  profiles[targetId] = profile;
-  await sSet('profile:'+targetId, profile);
-  await sSet('weightlog:'+targetId+':'+todayKey(), weight);
-
-  currentProfile = targetId;
-  todaysLog[targetId] = todaysLog[targetId] || [];
-  todaysExercise[targetId] = todaysExercise[targetId] || [];
-  addingNewProfile = false;
-  renderProfileSwitcher();
-  showScreen('home');
-  renderHome();
-}
-
-function switchProfile(who){
-  currentProfile = who;
-  currentScreen = 'home';
-  renderProfileSwitcher();
-  loadProfileData(who).then(()=>{
-    renderCurrentProfileScreen();
-    showWaterReminder();
-  });
-}
-
-init();
-</script>
-</body>
-  <script>
-  // Define credentials and personal messages
-  const familyUsers = {
-    Dad: {
-      pin: "1234", // Set your preferred PIN
-      greeting: "Welcome, Dad! ❤️",
-      message: "Thank you for always being our pillar of strength. Your health and happiness mean the world to me — take good care of yourself today!"
-    },
-    Mom: {
-      pin: "1234",
-      greeting: "Welcome, Mom! ❤️",
-      message: "Your love and warmth keep all of us going. Don't forget to prioritize your own nourishment, hydration, and rest today!"
-    },
-    Didi: {
-      pin: "1234",
-      greeting: "Hey Didi! ✨",
-      message: "Cheering you on every single day! Keep crushing your goals and staying energized."
-    },
-    Tanisi: {
-      pin: "1234",
-      greeting: "Welcome, Tanisi! ❤️✨",
-      message: "So grateful to have you in my life. Wishing you good health, great energy, and a wonderful day ahead."
-    }
-  };
-
-  function checkSession() {
-    const loggedInUser = localStorage.getItem("thali_family_user");
-    if (loggedInUser && familyUsers[loggedInUser]) {
-      showDashboard(loggedInUser);
-    } else {
-      document.getElementById("loginOverlay").style.display = "flex";
-      document.getElementById("personalBanner").style.display = "none";
-    }
-  }
-
-  function handleLogin() {
-    const user = document.getElementById("userSelect").value;
-    const pin = document.getElementById("userPin").value;
-    const errorEl = document.getElementById("loginError");
-
-    if (familyUsers[user] && familyUsers[user].pin === pin) {
-      errorEl.style.display = "none";
-      localStorage.setItem("thali_family_user", user); // Remembers them on this device
-      showDashboard(user);
-    } else {
-      errorEl.style.display = "block";
-    }
-  }
-
-  function showDashboard(user) {
-    const data = familyUsers[user];
-    document.getElementById("loginOverlay").style.display = "none";
-    
-    // Set personal greeting
-    const banner = document.getElementById("personalBanner");
-    document.getElementById("bannerGreeting").textContent = data.greeting;
-    document.getElementById("bannerMessage").textContent = data.message;
-    banner.style.display = "block";
-
-    // Automatically select their tab if available
-    const personTabs = Array.from(document.querySelectorAll("button, .tab"));
-    const targetTab = personTabs.find(tab => tab.textContent.trim() === user);
-    if (targetTab) {
-      targetTab.click();
-    }
-  }
-
-  function handleLogout() {
-    localStorage.removeItem("thali_family_user");
-    document.getElementById("userPin").value = "";
-    checkSession();
-  }
-
-  // Run on page load
-  window.addEventListener("DOMContentLoaded", checkSession);
-</script>
-</html>
+        systemInstruction:
