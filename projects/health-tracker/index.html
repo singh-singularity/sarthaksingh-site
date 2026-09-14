@@ -556,6 +556,7 @@
     </div>
     <p id="loginError" style="display:none; color:var(--brick); font-size:13px; font-weight:600; margin:0 0 12px;">Incorrect PIN — try again.</p>
     <button class="btn-primary" id="loginSubmit">Continue</button>
+    <button class="btn-ghost" id="forgotPinBtn" style="margin-top:8px;">Forgot PIN?</button>
   </div>
 </div>
 
@@ -950,6 +951,34 @@ async function submitLogin(){
   renderCurrentProfileScreen();
   showGreeting(id);
   await recordLogin(id);
+}
+
+async function forgotPin(){
+  const id = document.getElementById('loginUserSelect').value;
+  await loadProfileData(id);
+  const p = profiles[id];
+  if(!p || !p.pin){
+    showToast('No PIN set for '+displayName(id)+' — just leave the PIN field blank and continue');
+    return;
+  }
+  const ok = confirm('Reset the PIN for '+displayName(id)+'? Their food log, exercise history, and progress will NOT be touched — only the PIN is cleared. They can set a new one from "Edit profile" after logging in.');
+  if(!ok) return;
+
+  delete p.pin;
+  profiles[id] = p;
+  await sSet('profile:'+id, p);
+
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginOverlay').style.display = 'none';
+  localStorage.setItem(STORE_PREFIX+'remembered-profile', id);
+
+  currentProfile = id;
+  currentScreen = 'home';
+  renderProfileSwitcher();
+  renderCurrentProfileScreen();
+  showGreeting(id);
+  await recordLogin(id);
+  showToast('PIN reset — set a new one anytime from Edit profile');
 }
 
 function logoutToLogin(){
@@ -1717,6 +1746,7 @@ function bindEvents(){
   document.getElementById('ex-add').addEventListener('click', addExercise);
 
   document.getElementById('loginSubmit').addEventListener('click', submitLogin);
+  document.getElementById('forgotPinBtn').addEventListener('click', forgotPin);
   document.getElementById('loginPin').addEventListener('keydown', e=>{
     if(e.key==='Enter') submitLogin();
   });
