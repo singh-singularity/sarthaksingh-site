@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarthak Singh</title>
+<meta name="description" content="Sarthak Singh — strategy consultant, venture builder, squash player.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2330;
+    --ink-soft:#4C5566;
+    --paper:#EEF1EC;
+    --paper-raised:#F7F8F5;
+    --court:#1F5C82;
+    --court-soft:#DCE6EA;
+    --brass:#A9762F;
+    --line:#CBD1C7;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', -apple-system, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:500;
+    color:var(--ink);
+    margin:0;
+  }
+  a{ color:var(--court); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--court); outline-offset:3px; }
+  .wrap{ max-width:760px; margin:0 auto; padding:0 28px; }
+
+  /* Top nav */
+  nav.topnav{
+    position:sticky; top:0; z-index:10;
+    background:rgba(238,241,236,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.topnav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:14px; padding-bottom:14px;
+  }
+  nav.topnav .nm{
+    font-family:'Fraunces', serif; font-size:17px; font-weight:500; color:var(--ink);
+  }
+  nav.topnav .links{ display:flex; gap:22px; }
+  nav.topnav .links a{
+    color:var(--ink-soft); font-size:14.5px; font-weight:500;
+  }
+  nav.topnav .links a:hover{ color:var(--court); text-decoration:none; }
+
+  /* Hero */
+  .hero{ padding:64px 0 56px; position:relative; }
+  .hero-grid{ display:flex; gap:40px; align-items:flex-end; flex-wrap:wrap; }
+  .hero-text{ flex:1; min-width:280px; }
+  .hero h1{ font-size:44px; letter-spacing:-0.01em; line-height:1.08; }
+  .hero .role{
+    margin-top:10px; font-size:17px; color:var(--ink-soft); font-weight:500;
+  }
+  .hero .role .sep{ color:var(--line); margin:0 8px; }
+  .hero p.lede{
+    margin-top:22px; max-width:56ch; font-size:16.5px; color:var(--ink-soft);
+  }
+  .hero .links{ margin-top:26px; display:flex; gap:18px; flex-wrap:wrap; }
+  .hero .links a{
+    font-size:14.5px; font-weight:600; color:var(--ink);
+    border-bottom:1.5px solid var(--brass); padding-bottom:2px;
+  }
+  .hero .links a:hover{ text-decoration:none; color:var(--court); border-color:var(--court); }
+
+  .court-graphic{ flex-shrink:0; width:150px; }
+  .court-graphic svg{ width:100%; height:auto; display:block; }
+
+  /* Sections */
+  section{ padding:52px 0; border-top:1px solid var(--line); }
+  section .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; color:var(--brass); font-weight:500;
+    margin-bottom:6px;
+  }
+  section h2{ font-size:27px; margin-bottom:22px; }
+  section > .wrap > p.intro{
+    color:var(--ink-soft); max-width:58ch; margin:-8px 0 26px;
+  }
+
+  /* Experience rows */
+  .xp-row{
+    display:grid; grid-template-columns:140px 1fr; gap:18px;
+    padding:18px 0; border-top:1px solid var(--line);
+  }
+  .xp-row:first-of-type{ border-top:none; }
+  .xp-row .when{ font-size:13.5px; color:var(--ink-soft); padding-top:3px; }
+  .xp-row .role{ font-weight:600; font-size:16px; }
+  .xp-row .org{ color:var(--court); font-weight:500; }
+  .xp-row .desc{ margin-top:6px; color:var(--ink-soft); font-size:15px; max-width:52ch; }
+
+  /* Venture cards */
+  .venture{
+    padding:22px 0; border-top:1px solid var(--line);
+  }
+  .venture:first-of-type{ border-top:none; }
+  .venture-head{ display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .venture-head h3{ font-size:19px; font-weight:600; font-family:'IBM Plex Sans',sans-serif; }
+  .status{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; font-weight:500;
+    padding:2px 8px; border-radius:3px;
+  }
+  .status.live{ background:#DCEEE2; color:#1E6B3D; }
+  .status.case{ background:var(--court-soft); color:var(--court); }
+  .venture p{ margin:8px 0 0; color:var(--ink-soft); font-size:15px; max-width:58ch; }
+  .venture .go{ display:inline-block; margin-top:10px; font-size:14px; font-weight:600; }
+
+  /* Background timeline */
+  .bg-item{ padding:16px 0; border-top:1px solid var(--line); }
+  .bg-item:first-of-type{ border-top:none; }
+  .bg-item .t1{ font-weight:600; font-size:15.5px; }
+  .bg-item .t2{ color:var(--ink-soft); font-size:14.5px; margin-top:3px; }
+
+  .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
+  .pill{
+    background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:999px; padding:6px 13px; font-size:13.5px; color:var(--ink-soft);
+  }
+
+  /* Contact */
+  .contact p{ max-width:52ch; color:var(--ink-soft); }
+  .contact .links{ margin-top:18px; display:flex; gap:22px; flex-wrap:wrap; }
+  .contact .links a{ font-weight:600; font-size:15px; }
+
+  footer{ padding:30px 0 50px; color:var(--ink-soft); font-size:13px; }
+
+  @media (max-width:640px){
+    .hero h1{ font-size:34px; }
+    .court-graphic{ width:100px; }
+    .xp-row{ grid-template-columns:1fr; gap:4px; }
+    nav.topnav .links{ gap:14px; }
+    nav.topnav .links a{ font-size:13px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="wrap">
+    <span class="nm">Sarthak Singh</span>
+    <div class="links">
+      <a href="#work">Work</a>
+      <a href="#ventures">Ventures</a>
+      <a href="#background">Background</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <h1>Sarthak Singh</h1>
+        <div class="role">Associate Consultant, Strategy&amp; (PwC)<span class="sep">·</span>IIT Delhi</div>
+        <p class="lede">I work in strategy consulting by day — mostly consumer goods and hospitality clients — and spend evenings building small things: a nutrition tracker for my family, a gig-marketplace for household errands, a couple of venture ideas I evaluated hard and mostly killed. I also play a fair amount of squash.</p>
+        <div class="links">
+          <a href="mailto:your.email@example.com">Email</a>
+          <a href="https://linkedin.com/in/your-handle">LinkedIn</a>
+          <a href="https://github.com/your-handle">GitHub</a>
+        </div>
+      </div>
+      <div class="court-graphic" aria-hidden="true">
+        <svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="184" height="304" fill="none" stroke="#1F5C82" stroke-width="2"/>
+          <line x1="8" y1="152" x2="192" y2="152" stroke="#1F5C82" stroke-width="1.5"/>
+          <line x1="100" y1="152" x2="100" y2="312" stroke="#1F5C82" stroke-width="1.5"/>
+          <rect x="8" y="222" width="46" height="46" fill="none" stroke="#1F5C82" stroke-width="1.2" opacity="0.6"/>
+          <rect x="146" y="222" width="46" height="46" fill="none" stroke="#1F5C82" stroke-width="1.2" opacity="0.6"/>
+          <line x1="8" y1="105" x2="192" y2="105" stroke="#1F5C82" stroke-width="1" opacity="0.35"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="work">
+  <div class="wrap">
+    <div class="kicker">Currently, and before</div>
+    <h2>Work</h2>
+
+    <div class="xp-row">
+      <div class="when">Jul 2025 — Present</div>
+      <div>
+        <div class="role">Associate Consultant</div>
+        <div class="org">Strategy&amp; (PwC)</div>
+        <div class="desc">Client work spanning consumer goods — packaged-food go-to-market, supply chain, quick-commerce — and hospitality.</div>
+      </div>
+    </div>
+
+    <div class="xp-row">
+      <div class="when">Prior</div>
+      <div>
+        <div class="role">Founder's Office &amp; Investments</div>
+        <div class="org">BlueGreen Ventures</div>
+      </div>
+    </div>
+
+    <div class="xp-row">
+      <div class="when">Prior</div>
+      <div>
+        <div class="role">Summer Consultant</div>
+        <div class="org">Nomura Research Institute</div>
+      </div>
+    </div>
+
+    <div class="xp-row">
+      <div class="when">Earlier</div>
+      <div>
+        <div class="role">Early experience</div>
+        <div class="org">Impactverse, CredFlow</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ventures">
+  <div class="wrap">
+    <div class="kicker">Outside client work</div>
+    <h2>Ventures &amp; projects</h2>
+    <p class="intro">A few things I've built end to end — some live, some deliberately shelved once the evidence didn't hold up. I'd rather show the kill discipline than pretend everything worked.</p>
+
+    <div class="venture">
+      <div class="venture-head">
+        <h3>Thali Track</h3>
+        <span class="status live">Live</span>
+      </div>
+      <p>A daily nutrition and macro tracker built for my parents and friends. Pick a typical Indian dish from a list or snap a photo of the plate — it identifies what's there, asks you to confirm, then shows calories, protein, carbs, fat and fiber left for the day. Also handles exercise credit and a weight-goal timeline.</p>
+      <a class="go" href="./projects/health-tracker/">Open the tracker →</a>
+    </div>
+
+    <div class="venture">
+      <div class="venture-head">
+        <h3>Saathi</h3>
+        <span class="status live">Live</span>
+      </div>
+      <p>A gig marketplace for physical, in-person errands — from grocery runs to hospital admission and discharge paperwork. Built around three worker tiers (companion, coordinator, specialist), with the hospital-support line beachheaded on NRI children managing eldercare for parents back home. Eight everyday services are bookable in Pune today.</p>
+      <a class="go" href="https://your-saathi-url-here">Visit Saathi →</a>
+    </div>
+
+    <div class="venture">
+      <div class="venture-head">
+        <h3>Shelfproof</h3>
+        <span class="status case">Case study</span>
+      </div>
+      <p>Picked from a structured gap analysis, not an idea I started with: a weekly audit of quick-commerce retail media for Indian consumer brands. Built through to a working audit module, a landing page, and a first-customer outreach package — then shelved once the market read as too saturated to defend long-term.</p>
+    </div>
+
+    <div class="venture">
+      <div class="venture-head">
+        <h3>Kasauti</h3>
+        <span class="status case">Case study</span>
+      </div>
+      <p>An exploration into reference-materials manufacturing — matrix-matched quality-control samples for Indian food-testing labs, with a path to NABL/ISO 17034 accreditation. Built the business case, a lab target list, and a working ISO Guide 35 uncertainty-budget calculator, then set it aside to focus the search inside health and wellness.</p>
+    </div>
+  </div>
+</section>
+
+<section id="background">
+  <div class="wrap">
+    <div class="kicker">Education, research, and squash</div>
+    <h2>Background</h2>
+
+    <div class="bg-item">
+      <div class="t1">B.Tech &amp; M.Tech, Chemical Engineering — IIT Delhi</div>
+      <div class="t2">2025 · GPA 8.54</div>
+    </div>
+
+    <div class="bg-item">
+      <div class="t1">Published research, International Journal of Gas Science</div>
+      <div class="t2">2024–25 · Sole author, on air-contaminant destruction (Claus process)</div>
+    </div>
+
+    <div class="bg-item">
+      <div class="t1">AIR 113, NDA exam · Indian Naval Scholarship</div>
+    </div>
+
+    <div class="bg-item">
+      <div class="t1">Institute squash captain, IIT Delhi</div>
+      <div class="t2">National-level player · InterIIT squash gold</div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap contact">
+    <div class="kicker">Get in touch</div>
+    <h2>Contact</h2>
+    <p>Happy to talk strategy, ventures, health &amp; wellness, or a game of squash if you're ever in Mumbai.</p>
+    <div class="links">
+      <a href="mailto:your.email@example.com">your.email@example.com</a>
+      <a href="https://linkedin.com/in/your-handle">LinkedIn</a>
+      <a href="https://github.com/your-handle">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Sarthak Singh</div>
+</footer>
+
+</body>
+</html>
