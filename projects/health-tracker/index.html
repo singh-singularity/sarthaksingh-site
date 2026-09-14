@@ -523,6 +523,39 @@
 </style>
 </head>
 <body>
+  <!-- Family Login Modal -->
+<div id="loginOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,-apple-system,sans-serif;">
+  <div style="background:#fff;max-width:380px;width:100%;border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.3);text-align:center;">
+    <h2 style="margin:0 0 8px;color:#1e293b;">Family Portal Login</h2>
+    <p style="margin:0 0 20px;color:#64748b;font-size:14px;">Select your name and enter your PIN to continue.</p>
+
+    <label style="display:block;text-align:left;font-weight:600;font-size:13px;margin-bottom:6px;color:#334155;">Who are you?</label>
+    <select id="userSelect" style="width:100%;padding:10px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:16px;font-size:15px;">
+      <option value="Dad">Dad</option>
+      <option value="Mom">Mom</option>
+      <option value="Didi">Didi</option>
+      <option value="Tanisi">Tanisi</option>
+    </select>
+
+    <label style="display:block;text-align:left;font-weight:600;font-size:13px;margin-bottom:6px;color:#334155;">Enter PIN</label>
+    <input type="password" id="userPin" placeholder="4-digit PIN" maxlength="6" style="width:100%;padding:10px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:16px;font-size:15px;box-sizing:border-box;">
+
+    <p id="loginError" style="color:#ef4444;font-size:13px;display:none;margin-bottom:12px;">Incorrect PIN. Please try again.</p>
+
+    <button onclick="handleLogin()" style="width:100%;background:#064e3b;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:600;font-size:15px;cursor:pointer;">Unlock Health Tracker</button>
+  </div>
+</div>
+
+<!-- Personalized Greeting Banner (Displays above the tracker once logged in) -->
+<div id="personalBanner" style="display:none;max-width:600px;margin:16px auto;padding:16px 20px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-family:system-ui,-apple-system,sans-serif;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div>
+      <h3 id="bannerGreeting" style="margin:0 0 6px;font-size:17px;"></h3>
+      <p id="bannerMessage" style="margin:0;font-size:14px;line-height:1.5;color:#047857;"></p>
+    </div>
+    <button onclick="handleLogout()" style="background:transparent;border:none;color:#059669;text-decoration:underline;font-size:12px;cursor:pointer;padding-left:12px;">Switch</button>
+  </div>
+</div>
 <div class="app" id="app">
 
   <div class="topbar">
@@ -1638,4 +1671,80 @@ function switchProfile(who){
 init();
 </script>
 </body>
+  <script>
+  // Define credentials and personal messages
+  const familyUsers = {
+    Dad: {
+      pin: "1234", // Set your preferred PIN
+      greeting: "Welcome, Dad! ❤️",
+      message: "Thank you for always being our pillar of strength. Your health and happiness mean the world to me — take good care of yourself today!"
+    },
+    Mom: {
+      pin: "1234",
+      greeting: "Welcome, Mom! ❤️",
+      message: "Your love and warmth keep all of us going. Don't forget to prioritize your own nourishment, hydration, and rest today!"
+    },
+    Didi: {
+      pin: "1234",
+      greeting: "Hey Didi! ✨",
+      message: "Cheering you on every single day! Keep crushing your goals and staying energized."
+    },
+    Tanisi: {
+      pin: "1234",
+      greeting: "Welcome, Tanisi! ❤️✨",
+      message: "So grateful to have you in my life. Wishing you good health, great energy, and a wonderful day ahead."
+    }
+  };
+
+  function checkSession() {
+    const loggedInUser = localStorage.getItem("thali_family_user");
+    if (loggedInUser && familyUsers[loggedInUser]) {
+      showDashboard(loggedInUser);
+    } else {
+      document.getElementById("loginOverlay").style.display = "flex";
+      document.getElementById("personalBanner").style.display = "none";
+    }
+  }
+
+  function handleLogin() {
+    const user = document.getElementById("userSelect").value;
+    const pin = document.getElementById("userPin").value;
+    const errorEl = document.getElementById("loginError");
+
+    if (familyUsers[user] && familyUsers[user].pin === pin) {
+      errorEl.style.display = "none";
+      localStorage.setItem("thali_family_user", user); // Remembers them on this device
+      showDashboard(user);
+    } else {
+      errorEl.style.display = "block";
+    }
+  }
+
+  function showDashboard(user) {
+    const data = familyUsers[user];
+    document.getElementById("loginOverlay").style.display = "none";
+    
+    // Set personal greeting
+    const banner = document.getElementById("personalBanner");
+    document.getElementById("bannerGreeting").textContent = data.greeting;
+    document.getElementById("bannerMessage").textContent = data.message;
+    banner.style.display = "block";
+
+    // Automatically select their tab if available
+    const personTabs = Array.from(document.querySelectorAll("button, .tab"));
+    const targetTab = personTabs.find(tab => tab.textContent.trim() === user);
+    if (targetTab) {
+      targetTab.click();
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("thali_family_user");
+    document.getElementById("userPin").value = "";
+    checkSession();
+  }
+
+  // Run on page load
+  window.addEventListener("DOMContentLoaded", checkSession);
+</script>
 </html>
