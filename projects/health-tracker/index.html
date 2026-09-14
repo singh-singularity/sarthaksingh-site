@@ -41,7 +41,6 @@
     padding-bottom:92px;
   }
 
-  /* Header */
   .topbar{
     padding:22px 20px 16px;
     display:flex;
@@ -138,11 +137,9 @@
     flex-shrink:0;
   }
 
-  /* Screens */
   .screen{display:none; padding:0 20px;}
   .screen.active{display:block;}
 
-  /* Onboarding */
   .onboard-card{
     background:var(--paper);
     border-radius:var(--radius-lg);
@@ -172,6 +169,7 @@
   }
   .field input[type=text],
   .field input[type=number],
+  .field input[type=password],
   .field select{
     width:100%;
     padding:13px 14px;
@@ -227,7 +225,6 @@
     margin-top:10px;
   }
 
-  /* Dashboard */
   .greeting{
     margin-top:10px;
     margin-bottom:18px;
@@ -298,7 +295,6 @@
     margin:26px 0 10px;
   }
 
-  /* Recommendation */
   .rec-box{
     background:var(--gold-soft);
     border-radius:var(--radius-md);
@@ -328,7 +324,6 @@
     cursor:pointer;
   }
 
-  /* Log list */
   .log-item{
     display:flex;
     justify-content:space-between;
@@ -357,7 +352,6 @@
     border-radius:var(--radius-md);
   }
 
-  /* Add food screen */
   .add-tabs{display:flex; gap:8px; margin-top:8px; margin-bottom:16px;}
   .add-tabs button{
     flex:1;
@@ -430,7 +424,6 @@
   }
   @keyframes spin{to{transform:rotate(360deg);}}
 
-  /* Bottom nav */
   .bottomnav{
     position:fixed;
     bottom:0; left:0; right:0;
@@ -499,41 +492,6 @@
 </style>
 </head>
 <body>
-
-<!-- Family Login Modal -->
-<div id="loginOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,-apple-system,sans-serif;">
-  <div style="background:#fff;max-width:380px;width:100%;border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.3);text-align:center;">
-    <h2 style="margin:0 0 8px;color:#1e293b;font-size:22px;">Family Portal</h2>
-    <p style="margin:0 0 20px;color:#64748b;font-size:13.5px;">Select your name and enter your PIN to continue.</p>
-
-    <label style="display:block;text-align:left;font-weight:600;font-size:13px;margin-bottom:6px;color:#334155;">Who is logging in?</label>
-    <select id="userSelect" style="width:100%;padding:11px;border-radius:10px;border:1.5px solid #cbd5e1;margin-bottom:16px;font-size:15px;background:#f8fafc;">
-      <option value="Dad">Dad</option>
-      <option value="Mom">Mom</option>
-      <option value="Didi">Didi</option>
-      <option value="Tanisi">Tanisi</option>
-    </select>
-
-    <label style="display:block;text-align:left;font-weight:600;font-size:13px;margin-bottom:6px;color:#334155;">4-Digit PIN</label>
-    <input type="password" id="userPin" placeholder="Enter PIN" maxlength="6" style="width:100%;padding:11px;border-radius:10px;border:1.5px solid #cbd5e1;margin-bottom:14px;font-size:16px;box-sizing:border-box;">
-
-    <p id="loginError" style="color:#ef4444;font-size:13px;display:none;margin-bottom:12px;font-weight:500;">Incorrect PIN. Please try again.</p>
-
-    <button onclick="handleLogin()" style="width:100%;background:#25402F;color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;">Unlock Health Tracker</button>
-  </div>
-</div>
-
-<!-- Personalized Greeting Banner -->
-<div id="personalBanner" style="display:none;max-width:480px;margin:16px auto 0;padding:18px 20px;border-radius:16px;background:#FFF9F5;border:1px solid #FFE4D6;box-shadow:0 4px 14px rgba(0,0,0,0.03);">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
-    <div>
-      <h3 id="bannerGreeting" style="margin:0 0 6px;font-size:17.5px;color:#9C4221;"></h3>
-      <p id="bannerMessage" style="margin:0;font-size:13.5px;line-height:1.55;color:#5C4033;white-space:pre-line;"></p>
-    </div>
-    <button onclick="handleLogout()" style="background:none;border:none;color:#A85D3B;text-decoration:underline;font-size:12px;cursor:pointer;padding-left:10px;font-weight:600;">Switch</button>
-  </div>
-  <div id="bannerGallery" style="display:none;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:10px;margin-top:14px;"></div>
-</div>
 
 <div class="app" id="app">
   <div class="topbar">
@@ -682,6 +640,7 @@
         <input type="file" accept="image/*" id="photoInput">
       </div>
       <div id="photoResults"></div>
+      <p class="note" id="photoNote">Uses your Gemini API key to identify the dish — add one in Settings (⚙). You'll always be asked to confirm what it identified before any nutrition numbers are added.</p>
     </div>
   </div>
 
@@ -716,14 +675,14 @@
   <div class="screen" id="screen-settings">
     <div class="onboard-card">
       <h2>Settings</h2>
-      <p class="lead">Everyone's data stays securely in this browser on this device.</p>
+      <p class="lead">Everyone's data stays in this browser, on this device. No account or login needed.</p>
 
       <div class="field">
         <label>Gemini API key (for "Snap a photo")</label>
-        <input type="text" id="settings-apikey" placeholder="Pre-fed for family">
+        <input type="text" id="settings-apikey" placeholder="AIza...">
       </div>
-      <button class="btn-primary" id="settings-save">Save Custom Key</button>
-      <p class="note">A pre-fed family key is already built into the app. You can override it here anytime with your own key from <span style="font-weight:600;">aistudio.google.com/apikey</span>.</p>
+      <button class="btn-primary" id="settings-save">Save</button>
+      <p class="note">Only needed for photo food-recognition — everything else (picking from the list, tracking, history, progress) works without it. Get a key at <span style="font-weight:600;">aistudio.google.com/apikey</span>. Stored only in this browser, sent only to Google's API when a photo is analysed. This app has no built-in key — each person needs to add their own here.</p>
       <button class="btn-ghost" id="settings-back">Back</button>
     </div>
   </div>
@@ -836,126 +795,11 @@ function slugify(name){
   return candidate;
 }
 
-/* ---------------- Family Credentials & Personalized Greetings ---------------- */
-const DEFAULT_GEMINI_KEY = atob("QVEuQWI4Uk42SjRwRklqODMxblJ2YlYtUkJkSzIwNWpqRUIyVERVMGJUMXZlMTFFU0hIcHc=");
-
-const familyUsers = {
-  Dad: {
-    id: "dad",
-    pin: "1234",
-    greeting: "Welcome, Dad! ❤️",
-    message: "Thank you for always being our pillar of strength. Your health, daily energy, and happiness mean the world to me — take good care of yourself today!",
-    photos: []
-  },
-  Mom: {
-    id: "mom",
-    pin: "1234",
-    greeting: "Welcome, Mom! ❤️",
-    message: "Your warmth and care keep our home bright and beautiful. Please make sure to eat well, stay hydrated, and take moments to rest today!",
-    photos: []
-  },
-  Didi: {
-    id: "didi",
-    pin: "1234",
-    greeting: "Hey Didi! ✨",
-    message: "Cheering you on every single day! Keep crushing your goals, staying fit, and shining bright.",
-    photos: []
-  },
-  Tanisi: {
-    id: "tanisi",
-    pin: "1234",
-    greeting: "To My Favorite Person, Tanisi ❤️✨",
-    message: "Thank you for filling my life with so much happiness, laughter, and light. Watching you thrive is my favorite thing in the world, and I'm always cheering for you.\n\nHere’s to staying radiant, nourished, and building countless beautiful memories together! 💕",
-    photos: [
-      "https://drive.google.com/thumbnail?id=1F9hXhg7HnuzDBlnY0Vnx5ucsa__eakQB&sz=w600",
-      "https://drive.google.com/thumbnail?id=1dR5oaet4H9UJfVO22K1432K4Zq5zAYbK&sz=w600",
-      "https://drive.google.com/thumbnail?id=1vqTa5Iw3TpyQRg7eWfB1Gl4qEjc5V1p9&sz=w600"
-    ]
-  }
-};
-
-function checkSession() {
-  const savedUser = localStorage.getItem("thali_family_user");
-  const overlay = document.getElementById("loginOverlay");
-  if (savedUser && familyUsers[savedUser]) {
-    if (overlay) overlay.style.display = "none";
-    showDashboard(savedUser);
-  } else {
-    if (overlay) overlay.style.display = "flex";
-  }
-}
-
-function handleLogin() {
-  const user = document.getElementById("userSelect").value;
-  const pin = document.getElementById("userPin").value.trim();
-  const errorEl = document.getElementById("loginError");
-
-  if (familyUsers[user] && familyUsers[user].pin === pin) {
-    errorEl.style.display = "none";
-    localStorage.setItem("thali_family_user", user);
-    showDashboard(user);
-  } else {
-    errorEl.style.display = "block";
-  }
-}
-
-function showDashboard(user) {
-  const data = familyUsers[user];
-  const overlay = document.getElementById("loginOverlay");
-  if (overlay) overlay.style.display = "none";
-
-  const banner = document.getElementById("personalBanner");
-  document.getElementById("bannerGreeting").textContent = data.greeting;
-  document.getElementById("bannerMessage").textContent = data.message;
-  banner.style.display = "block";
-
-  const gallery = document.getElementById("bannerGallery");
-  gallery.innerHTML = "";
-  if (data.photos && data.photos.length > 0) {
-    gallery.style.display = "grid";
-    data.photos.forEach(src => {
-      const img = document.createElement("img");
-      img.src = src;
-      img.style.width = "100%";
-      img.style.height = "120px";
-      img.style.objectFit = "cover";
-      img.style.borderRadius = "12px";
-      img.style.boxShadow = "0 3px 8px rgba(0,0,0,0.08)";
-      gallery.appendChild(img);
-    });
-  } else {
-    gallery.style.display = "none";
-  }
-
-  if (data.id && profileIndex.includes(data.id)) {
-    switchProfile(data.id);
-  }
-}
-
-function handleLogout() {
-  localStorage.removeItem("thali_family_user");
-  document.getElementById("userPin").value = "";
-  document.getElementById("personalBanner").style.display = "none";
-  checkSession();
-}
-
 /* ---------------- Init ---------------- */
 async function init(){
   const idx = await sGet('profile-index');
-  // Strict order: Dad, Mom, Didi, Tanisi
   profileIndex = idx || ['dad','mom','didi','tanisi'];
-  if(!profileIndex.includes('didi')) profileIndex.push('didi');
-  if(!profileIndex.includes('tanisi')) profileIndex.push('tanisi');
-  
-  const targetOrder = ['dad', 'mom', 'didi', 'tanisi'];
-  profileIndex.sort((a,b)=>{
-    const ia = targetOrder.indexOf(a), ib = targetOrder.indexOf(b);
-    if(ia !== -1 && ib !== -1) return ia - ib;
-    if(ia !== -1) return -1;
-    if(ib !== -1) return 1;
-    return 0;
-  });
-  await sSet('profile-index', profileIndex);
+  if(!idx) await sSet('profile-index', profileIndex);
 
   currentProfile = profileIndex[0];
   await loadProfileData(currentProfile);
@@ -963,7 +807,6 @@ async function init(){
   renderCurrentProfileScreen();
   bindEvents();
   showWaterReminder();
-  checkSession();
 }
 
 async function loadProfileData(id){
@@ -1245,20 +1088,21 @@ async function addExercise(){
   renderExerciseChips(currentProfile);
 }
 
-/* ---------------- Photo Analysis (Pre-fed Key + Interactive Chat & Unified Logging) ---------------- */
+/* ---------------- Photo Analysis with Interactive Chat & Single Log ---------------- */
 function fileToBase64(file){
   return new Promise((res,rej)=>{
     const r = new FileReader();
-    r.onload = () => res(r.result.split(','));
+    r.onload = () => res(r.result.split(',')[1]);
     r.onerror = () => rej(new Error('read failed'));
     r.readAsDataURL(file);
   });
 }
 
 function getApiKey(){
-  return localStorage.getItem(STORE_PREFIX+'gemini-api-key') || DEFAULT_GEMINI_KEY;
+  return localStorage.getItem(STORE_PREFIX+'gemini-api-key') || '';
 }
 
+const GEMINI_MODEL = 'gemini-flash-latest';
 let currentMealItems = [];
 let oilMultiplier = 1.0;
 
@@ -1266,7 +1110,7 @@ async function analyzePhoto(file){
   const resultsDiv = document.getElementById('photoResults');
   const apiKey = getApiKey();
   if(!apiKey){
-    resultsDiv.innerHTML = '<div class="empty-state">Add a Gemini API key in Settings (⚙ at top) to enable photo analysis.</div>';
+    resultsDiv.innerHTML = '<div class="empty-state">Add a Gemini API key in Settings (⚙ at the top) to turn on photo recognition. "Pick from list" works fine without any setup, meanwhile.</div>';
     return;
   }
   const previewB64 = await fileToBase64(file);
@@ -1276,7 +1120,7 @@ async function analyzePhoto(file){
     '<div class="analyzing"><div class="spinner"></div> Identifying dishes and portion sizes…</div>';
 
   try{
-    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+GEMINI_MODEL+':generateContent', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1298,15 +1142,21 @@ async function analyzePhoto(file){
       })
     });
 
-    const data = await response.json();
-    if(data.error) throw new Error(data.error.message || 'API error');
+    let data;
+    const rawText = await response.text();
+    try{ data = JSON.parse(rawText); }
+    catch(parseErr){ throw new Error('HTTP '+response.status+' — non-JSON response: '+rawText.slice(0,200)); }
+    if(data.error) throw new Error('HTTP '+response.status+' — '+(data.error.status||'')+': '+(data.error.message || 'API error'));
+    if(!response.ok) throw new Error('HTTP '+response.status+' — '+rawText.slice(0,200));
     const cand = (data.candidates||[])[0];
-    const part = cand && cand.content && cand.content.parts ? cand.content.parts.find(p=>p.text) : null;
-    if(!part) throw new Error('No response content');
-    
+    if(!cand) throw new Error('No candidates in response. Full response: '+rawText.slice(0,300));
+    if(cand.finishReason && cand.finishReason!=='STOP') throw new Error('Model stopped early: '+cand.finishReason);
+    const part = cand.content && cand.content.parts ? cand.content.parts.find(p=>p.text) : null;
+    if(!part) throw new Error('No text part in response. Full response: '+rawText.slice(0,300));
+
     let clean = part.text.trim().replace(/^```json/,'').replace(/^```/,'').replace(/```$/,'').trim();
     const parsed = JSON.parse(clean);
-    
+
     currentMealItems = (parsed.items || []).map(it => ({
       name: it.name,
       qty: it.qty || 1,
@@ -1322,7 +1172,7 @@ async function analyzePhoto(file){
   } catch(e){
     console.error(e);
     resultsDiv.innerHTML = '<div class="preview-wrap"><img src="data:'+mediaType+';base64,'+previewB64+'"></div>'+
-      '<div class="empty-state">Could not analyse this photo. Check that your API key is active.</div>';
+      '<div class="empty-state">Could not analyse this photo. You can always pick the closest item from "Pick from list" instead.<br><br><span style="font-family:monospace; font-size:11px; color:var(--brick); word-break:break-word;">Error detail: '+String(e.message||e).replace(/</g,'&lt;')+'</span></div>';
   }
 }
 
@@ -1331,18 +1181,15 @@ function renderInteractiveMeal(previewB64, mediaType) {
   resultsDiv.innerHTML = `
     <div class="preview-wrap" style="margin-bottom:14px;"><img src="data:${mediaType};base64,${previewB64}"></div>
 
-    <!-- Portion Assumptions Banner -->
     <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:#166534;line-height:1.45;">
       📏 <strong>Assumptions:</strong> 1 small katori (cup) ≈ 150 ml (150 g) • 1 medium roti ≈ 35 g • Typical home-cooked preparation.
     </div>
 
-    <!-- Interactive Chat Card -->
     <div style="background:#FFFDF9;border:1px solid #EFE8DA;border-radius:14px;padding:14px;margin-bottom:14px;">
       <div style="font-weight:700;font-size:13.5px;color:#26241F;margin-bottom:10px;">
         🍲 Here's what we identified in your thali:
       </div>
 
-      <!-- Oil / Ghee Selector -->
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12.5px;color:#615B4E;">
         <span style="font-weight:600;">Oil / Ghee:</span>
         <button type="button" class="oil-btn" onclick="setOil(0.8, this)" style="padding:4px 10px;border-radius:8px;border:1.5px solid #E7E0D1;background:#fff;cursor:pointer;">Low</button>
@@ -1350,11 +1197,9 @@ function renderInteractiveMeal(previewB64, mediaType) {
         <button type="button" class="oil-btn" onclick="setOil(1.3, this)" style="padding:4px 10px;border-radius:8px;border:1.5px solid #E7E0D1;background:#fff;cursor:pointer;">High</button>
       </div>
 
-      <!-- Meal Items Breakdown -->
       <div id="mealItemsContainer" style="display:flex;flex-direction:column;gap:8px;"></div>
     </div>
 
-    <!-- Remarks / Chat Correction Box -->
     <div style="background:#FFFDF9;border:1px solid #EFE8DA;border-radius:14px;padding:12px 14px;margin-bottom:14px;">
       <label style="display:block;font-size:12.5px;font-weight:700;color:#26241F;margin-bottom:6px;">Need to adjust items or portions?</label>
       <div style="display:flex;gap:8px;">
@@ -1363,7 +1208,6 @@ function renderInteractiveMeal(previewB64, mediaType) {
       </div>
     </div>
 
-    <!-- Single Unified Log Button -->
     <button type="button" onclick="logEntireMeal()" class="btn-primary" style="margin-top:4px;padding:15px;font-size:15px;">
       Log Entire Meal (<span id="totalMealCals">0</span> kcal)
     </button>
@@ -1389,7 +1233,7 @@ function updateMealDisplay() {
   const container = document.getElementById('mealItemsContainer');
   if(!container) return;
   container.innerHTML = '';
-  let totalCals = 0, totalP = 0, totalC = 0, totalF = 0;
+  let totalCals = 0;
 
   currentMealItems.forEach((item, index) => {
     const adjCals = Math.round(item.cal * item.qty * (item.isFatSensitive ? oilMultiplier : 1));
@@ -1398,9 +1242,6 @@ function updateMealDisplay() {
     const adjCarbs = Math.round(item.c * item.qty);
 
     totalCals += adjCals;
-    totalP += adjProtein;
-    totalC += adjCarbs;
-    totalF += adjFat;
 
     const row = document.createElement('div');
     row.style.cssText = "display:flex;justify-content:space-between;align-items:center;background:#fff;padding:10px 12px;border-radius:10px;border:1px solid #E7E0D1;";
@@ -1526,7 +1367,7 @@ async function getWeightLog(who){
     const keys = await sListPrefix('weightlog:'+who+':');
     const entries = [];
     for(const k of keys){
-      const dateStr = k.split(':');
+      const dateStr = k.split(':')[2];
       const v = await sGet(k);
       if(v!=null) entries.push({date:dateStr, weight:v});
     }
@@ -1711,7 +1552,7 @@ function bindEvents(){
 
     const exSel = e.target.closest('[data-exselect]');
     if(exSel){ selectedExercise = exSel.dataset.exselect; highlightSelectedExercise(); return; }
-    
+
     const delEx = e.target.closest('[data-delex]');
     if(delEx){
       const idx = parseInt(delEx.dataset.delex,10);
@@ -1742,6 +1583,10 @@ async function saveOnboard(){
   const nameVal = document.getElementById('ob-name').value.trim();
   if(!age || !height || !weight){
     showToast('Please fill in age, height and weight');
+    return;
+  }
+  if(addingNewProfile && !nameVal){
+    showToast('Add a name so it shows up in the switcher');
     return;
   }
   let targetId = currentProfile;
