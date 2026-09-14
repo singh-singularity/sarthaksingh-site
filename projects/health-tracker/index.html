@@ -489,9 +489,84 @@
   .hist-bar i{display:block; height:100%; background:var(--green);}
 
   .note{font-size:12px; color:var(--ink-soft); line-height:1.5; margin-top:14px;}
+
+  /* Login overlay */
+  .login-overlay{
+    position:fixed; inset:0; z-index:9999;
+    background:rgba(38,36,31,0.82);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px;
+  }
+  .login-card{
+    background:var(--paper);
+    border-radius:var(--radius-lg);
+    padding:26px 24px;
+    max-width:360px;
+    width:100%;
+  }
+  .login-card h2{
+    font-family:Georgia,serif; font-size:22px; color:var(--green); margin:0 0 4px;
+  }
+  .login-card select{
+    width:100%;
+    padding:13px 14px;
+    border-radius:var(--radius-sm);
+    border:1.5px solid var(--line);
+    background:#FDFCF9;
+    font-size:16px;
+    color:var(--ink);
+    font-family:inherit;
+  }
+
+  /* Greeting banner */
+  .greet-banner{
+    max-width:440px;
+    margin:14px auto 0;
+    background:var(--gold-soft);
+    border:1px solid #E3C980;
+    border-radius:var(--radius-md);
+    padding:14px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .greet-banner .gb-title{ font-weight:700; font-size:15px; color:#7A5A16; }
+  .greet-banner .gb-msg{ font-size:13px; color:#8A6A1E; margin-top:4px; line-height:1.5; }
+  .greet-banner button{
+    background:none; border:none; color:#7A5A16; text-decoration:underline;
+    font-size:12px; font-weight:600; cursor:pointer; flex-shrink:0;
+  }
 </style>
 </head>
 <body>
+
+<!-- LOGIN MODAL -->
+<div id="loginOverlay" class="login-overlay" style="display:none;">
+  <div class="login-card">
+    <h2>Who's this?</h2>
+    <p class="lead" style="margin:0 0 18px; font-size:14px;">Pick your name and enter your PIN if you set one.</p>
+    <div class="field">
+      <label>Name</label>
+      <select id="loginUserSelect"></select>
+    </div>
+    <div class="field">
+      <label>PIN</label>
+      <input type="password" id="loginPin" placeholder="Leave blank if you didn't set one" maxlength="12">
+    </div>
+    <p id="loginError" style="display:none; color:var(--brick); font-size:13px; font-weight:600; margin:0 0 12px;">Incorrect PIN — try again.</p>
+    <button class="btn-primary" id="loginSubmit">Continue</button>
+  </div>
+</div>
+
+<!-- GREETING BANNER -->
+<div class="greet-banner" id="greetBanner" style="display:none;">
+  <div>
+    <div class="gb-title" id="greetTitle"></div>
+    <div class="gb-msg" id="greetMessage"></div>
+  </div>
+  <button id="greetSwitch">Switch</button>
+</div>
 
 <div class="app" id="app">
   <div class="topbar">
@@ -552,6 +627,12 @@
       <div class="field">
         <label>Goal weight (kg) — optional</label>
         <input type="number" id="ob-goal" placeholder="e.g. 80">
+      </div>
+
+      <div class="field">
+        <label>Set a PIN (optional)</label>
+        <input type="password" id="ob-pin" placeholder="e.g. 1234" maxlength="12">
+        <p class="note" style="margin-top:6px;">Leave blank for open access on this profile. If set, it'll be asked for when logging in as this person.</p>
       </div>
 
       <div class="field">
@@ -675,7 +756,7 @@
   <div class="screen" id="screen-settings">
     <div class="onboard-card">
       <h2>Settings</h2>
-      <p class="lead">Everyone's data stays in this browser, on this device. No account or login needed.</p>
+      <p class="lead">Everyone's data stays in this browser, on this device. No account with us — PINs are just for keeping family members from opening each other's logs on a shared device.</p>
 
       <div class="field">
         <label>Gemini API key (for "Snap a photo")</label>
@@ -684,6 +765,12 @@
       <button class="btn-primary" id="settings-save">Save</button>
       <p class="note">Only needed for photo food-recognition — everything else (picking from the list, tracking, history, progress) works without it. Get a key at <span style="font-weight:600;">aistudio.google.com/apikey</span>. Stored only in this browser, sent only to Google's API when a photo is analysed. This app has no built-in key — each person needs to add their own here.</p>
       <button class="btn-ghost" id="settings-back">Back</button>
+    </div>
+
+    <div class="onboard-card" style="margin-top:16px;">
+      <h2 style="font-size:17px;">Login history</h2>
+      <p class="lead" style="font-size:13px;">Last logins on this device.</p>
+      <div id="login-history-list"></div>
     </div>
   </div>
 
@@ -741,6 +828,17 @@ const EXERCISE_DB = [
 ];
 const EXERCISE_CREDIT_FACTOR = 0.75;
 
+/* ---------------- Grateful greetings per person ---------------- */
+const FAMILY_GREETINGS = {
+  dad:    { title: 'Good to see you, Dad',    message: 'Grateful for everything you do for this family — hope today treats you well.' },
+  mom:    { title: 'Good to see you, Mom',    message: 'Grateful for your warmth and care every single day — take a little time for yourself today too.' },
+  didi:   { title: 'Hey Didi',                message: 'Grateful to have you around — here\'s to a good day.' },
+  tanisi: { title: 'Hey Tanisi',              message: 'Grateful you\'re part of this circle — hope today\'s a good one.' },
+};
+function greetingFor(id){
+  return FAMILY_GREETINGS[id] || { title: 'Welcome, '+displayName(id), message: 'Glad you\'re here — let\'s see how today\'s shaping up.' };
+}
+
 /* ---------------- Storage helpers ---------------- */
 const STORE_PREFIX = 'thali-track:';
 async function sGet(key){
@@ -776,6 +874,7 @@ let currentScreen = 'home';
 let addingNewProfile = false;
 let selectedExercise = null;
 let screenBeforeSettings = 'home';
+let pendingLoginId = null;
 
 function fmt(n){ return Math.round(n).toLocaleString('en-IN'); }
 function displayName(id){
@@ -802,11 +901,92 @@ async function init(){
   if(!idx) await sSet('profile-index', profileIndex);
 
   currentProfile = profileIndex[0];
-  await loadProfileData(currentProfile);
+  bindEvents();
+
+  const remembered = localStorage.getItem(STORE_PREFIX+'remembered-profile');
+  if(remembered && profileIndex.includes(remembered)){
+    currentProfile = remembered;
+    await loadProfileData(currentProfile);
+    renderProfileSwitcher();
+    renderCurrentProfileScreen();
+    showWaterReminder();
+    showGreeting(currentProfile);
+    await recordLogin(currentProfile);
+  } else {
+    openLoginModal();
+  }
+}
+
+/* ---------------- Login / session ---------------- */
+function openLoginModal(preselectId){
+  const sel = document.getElementById('loginUserSelect');
+  sel.innerHTML = profileIndex.map(id=>'<option value="'+id+'">'+displayName(id)+'</option>').join('');
+  if(preselectId) sel.value = preselectId;
+  document.getElementById('loginPin').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginOverlay').style.display = 'flex';
+}
+
+async function submitLogin(){
+  const id = document.getElementById('loginUserSelect').value;
+  const enteredPin = document.getElementById('loginPin').value.trim();
+  await loadProfileData(id);
+  let p = profiles[id];
+  const errorEl = document.getElementById('loginError');
+
+  if(p && p.pin){
+    if(enteredPin !== p.pin){
+      errorEl.style.display = 'block';
+      return;
+    }
+  }
+  errorEl.style.display = 'none';
+  localStorage.setItem(STORE_PREFIX+'remembered-profile', id);
+  document.getElementById('loginOverlay').style.display = 'none';
+
+  currentProfile = id;
+  currentScreen = 'home';
   renderProfileSwitcher();
   renderCurrentProfileScreen();
-  bindEvents();
-  showWaterReminder();
+  showGreeting(id);
+  await recordLogin(id);
+}
+
+function logoutToLogin(){
+  localStorage.removeItem(STORE_PREFIX+'remembered-profile');
+  document.getElementById('greetBanner').style.display = 'none';
+  openLoginModal();
+}
+
+function showGreeting(id){
+  const g = greetingFor(id);
+  document.getElementById('greetTitle').textContent = g.title;
+  document.getElementById('greetMessage').textContent = g.message;
+  const banner = document.getElementById('greetBanner');
+  banner.style.display = 'flex';
+  setTimeout(()=>{ banner.style.display = 'none'; }, 9000);
+}
+
+async function recordLogin(id){
+  const history = (await sGet('login-history')) || [];
+  history.push({ id, name: displayName(id), time: new Date().toISOString() });
+  while(history.length > 50) history.shift();
+  await sSet('login-history', history);
+}
+
+async function renderLoginHistory(){
+  const wrap = document.getElementById('login-history-list');
+  if(!wrap) return;
+  const history = ((await sGet('login-history')) || []).slice().reverse().slice(0,10);
+  if(history.length===0){
+    wrap.innerHTML = '<div class="empty-state">No logins recorded yet.</div>';
+    return;
+  }
+  wrap.innerHTML = history.map(h=>{
+    const d = new Date(h.time);
+    const label = d.toLocaleDateString('en-IN',{weekday:'short', day:'numeric', month:'short'}) + ', ' + d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="hist-row"><div><div class="hd">'+h.name+'</div><div class="hs">'+label+'</div></div></div>';
+  }).join('');
 }
 
 async function loadProfileData(id){
@@ -848,6 +1028,7 @@ function clearOnboardForm(){
   document.getElementById('ob-height').value = '';
   document.getElementById('ob-weight').value = '';
   document.getElementById('ob-goal').value = '';
+  document.getElementById('ob-pin').value = '';
   document.querySelectorAll('#ob-activity button, #ob-pace button').forEach(b=>b.classList.remove('sel'));
 }
 
@@ -1478,6 +1659,7 @@ function bindEvents(){
     screenBeforeSettings = currentScreen;
     document.getElementById('settings-apikey').value = localStorage.getItem(STORE_PREFIX+'gemini-api-key') || '';
     showScreen('settings');
+    renderLoginHistory();
   });
   document.getElementById('settings-save').addEventListener('click', ()=>{
     const key = document.getElementById('settings-apikey').value.trim();
@@ -1534,6 +1716,12 @@ function bindEvents(){
 
   document.getElementById('ex-add').addEventListener('click', addExercise);
 
+  document.getElementById('loginSubmit').addEventListener('click', submitLogin);
+  document.getElementById('loginPin').addEventListener('keydown', e=>{
+    if(e.key==='Enter') submitLogin();
+  });
+  document.getElementById('greetSwitch').addEventListener('click', logoutToLogin);
+
   document.body.addEventListener('click', e=>{
     const add = e.target.closest('[data-quickadd]');
     if(add){ addFoodByName(add.dataset.quickadd, 1); return; }
@@ -1572,6 +1760,7 @@ function fillOnboardForm(p){
   document.getElementById('ob-height').value = p.height;
   document.getElementById('ob-weight').value = p.weight;
   document.getElementById('ob-goal').value = p.goalWeight || '';
+  document.getElementById('ob-pin').value = '';
   document.querySelectorAll('#ob-activity button').forEach(b=>b.classList.toggle('sel', parseFloat(b.dataset.v)===p.activity));
   document.querySelectorAll('#ob-pace button').forEach(b=>b.classList.toggle('sel', parseFloat(b.dataset.v)===p.pace));
 }
@@ -1604,6 +1793,7 @@ async function saveOnboard(){
     activity: document.querySelector('#ob-activity button.sel') ? parseFloat(document.querySelector('#ob-activity button.sel').dataset.v) : 1.375,
     pace: document.querySelector('#ob-pace button.sel') ? parseFloat(document.querySelector('#ob-pace button.sel').dataset.v) : 0.5,
     goalWeight: document.getElementById('ob-goal').value ? parseFloat(document.getElementById('ob-goal').value) : (existing ? existing.goalWeight : null),
+    pin: document.getElementById('ob-pin').value.trim() ? document.getElementById('ob-pin').value.trim() : (existing ? existing.pin : undefined),
     startWeight: existing && existing.startWeight ? existing.startWeight : weight,
     startDate: existing && existing.startDate ? existing.startDate : todayKey(),
   };
@@ -1615,18 +1805,29 @@ async function saveOnboard(){
   todaysLog[targetId] = todaysLog[targetId] || [];
   todaysExercise[targetId] = todaysExercise[targetId] || [];
   addingNewProfile = false;
+  localStorage.setItem(STORE_PREFIX+'remembered-profile', targetId);
   renderProfileSwitcher();
   showScreen('home');
   renderHome();
+  showGreeting(targetId);
+  await recordLogin(targetId);
 }
 
 function switchProfile(who){
-  currentProfile = who;
-  currentScreen = 'home';
-  renderProfileSwitcher();
   loadProfileData(who).then(()=>{
+    const p = profiles[who];
+    if(p && p.pin){
+      openLoginModal(who);
+      return;
+    }
+    currentProfile = who;
+    currentScreen = 'home';
+    localStorage.setItem(STORE_PREFIX+'remembered-profile', who);
+    renderProfileSwitcher();
     renderCurrentProfileScreen();
     showWaterReminder();
+    showGreeting(who);
+    recordLogin(who);
   });
 }
 
