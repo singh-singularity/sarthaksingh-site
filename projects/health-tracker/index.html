@@ -832,8 +832,8 @@ async function init(){
   const idx = await sGet('profile-index');
   profileIndex = idx || ['dad','mom'];
   if(!idx) await sSet('profile-index', profileIndex);
-  if(!profileIndex.includes('tanisi')){
-    profileIndex.push('tanisi');
+  if(!profileIndex.includes('didi')){
+    profileIndex.push('didi');
     await sSet('profile-index', profileIndex);
   }
   currentProfile = profileIndex[0];
